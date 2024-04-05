@@ -1,0 +1,40 @@
+body {
+  width: 100vw;
+  height: 100vh;
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    0deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 9, 121, 1) 29%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+
+.center {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.music-poster {
+  flex-direction: column;
+}
+
+.music-poster > ul {
+
+  font-size: larger;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.music-poster > * h1 {
+    color: darkblue;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.music-poster .main-info {
+    width: 40%;
+    height: 40%;
+    border-radius: 10px;
+    background-color: white;
+}
