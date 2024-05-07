@@ -20,7 +20,6 @@ let milaBody = null;
 let milaEar = null;
 
 let leaf = null;
-let leafTexture
 //#endregion
 
 function radians(angle) {
@@ -248,11 +247,20 @@ function setUpTextures(){
 
     // load the actual image
     const leafImg = new Image();
-    leafImg.src = 'leaf.png';
+    leafImg.src = '.jpg';
 
-    leafImg.onload = () => {
-        doLoad (leafTexture, leafImg);
+    worldImage.onload = () => {
+        doLoad (worldTexture, worldImage);
     };
+}
+
+function doLoad(theTexture, theImage) {
+    gl.bindTexture(gl.TEXTURE_2D, theTexture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, theImage);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
 }
 
 // Create a program with the appropriate vertex and fragment shaders
