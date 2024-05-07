@@ -43,7 +43,7 @@ function radians(angle) {
 // each set does have the same list of attributes and uniforms that
 // need to be set
 //
-function bindVAO(shape, program) {
+function bindVAO(shape,program) {
     //create and bind VAO
     gl.useProgram(program);
     let theVAO = gl.createVertexArray();
@@ -154,12 +154,6 @@ function setUpCamera(program) {
     gl.uniformMatrix4fv(program.uViewT, false, viewMatrix);
 }
 
-///////////////////////////////////////////////////////////////////
-//
-//  No need to edit below this line.
-//
-////////////////////////////////////////////////////////////////////
-
 // general call to make and bind a new object based on current
 // settings..Basically a call to shape specfic calls in cgIshape.js
 function createShapes() {
@@ -183,24 +177,7 @@ function createShapes() {
 }
 
 function drawShapes() {
-    drawShape(milaHead, [-0.8, -1, 0], [3, 3, 3]);
-    drawShape(milaMuzzle, [0.1, -0.6, -1], [1.3, 1.3, 1.3]);
-    drawShape(milaBody, [-6, -5, 3], [5, 5, 5]);
-    drawShape(milaMuzzle, [.4, -0.5, -1], [.6, .6, .6]);
-    drawShape(leaf, [-.6,1.9,.5], [3,3,3]);
-}
-
-function drawShape(object){
-    //Body
-    milaBody = new Cube(6);
-    milaBody.VAO = bindVAO(milaBody, program);
-
-    //leaf
-    leaf = new Sphere(20, 20);
-    leaf.VAO = bindVAO(leaf, program);
-}
-
-function drawShapes() {
+    gl.useProgram(program);
     drawShape(milaHead, [-0.8, -1, 0], [3, 3, 3]);
     drawShape(milaMuzzle, [0.1, -0.6, -1], [1.3, 1.3, 1.3]);
     drawShape(milaBody, [-6, -5, 3], [5, 5, 5]);
@@ -269,7 +246,6 @@ function initProgram(vertexid, fragmentid) {
 
     // Create a program
     program = gl.createProgram();
-    gl.useProgram(program);
     // Attach the shaders to this program
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
