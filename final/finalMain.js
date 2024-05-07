@@ -20,6 +20,7 @@ let milaBody = null;
 let milaEar = null;
 
 let leaf = null;
+let leafTexture
 //#endregion
 
 function radians(angle) {
@@ -184,7 +185,7 @@ function drawShapes() {
     drawShape(milaMuzzle, [.4, -0.5, -1], [.6, .6, .6]);
     drawShape(leaf, [-.6,1.9,.5], [3,3,3]);
 
-    
+
     drawShape(milaEar, [-1.5,0,-1], [1,2,1], [40,1,1])
 }
 
@@ -238,6 +239,20 @@ function getShader(id) {
     }
 
     return shader;
+}
+
+function setUpTextures(){
+
+    // get some texture space from the gpu
+    leafTexture = gl.createTexture();
+
+    // load the actual image
+    const leafImg = new Image();
+    leafImg.src = 'leaf.png';
+
+    leafImg.onload = () => {
+        doLoad (leafTexture, leafImg);
+    };
 }
 
 // Create a program with the appropriate vertex and fragment shaders
