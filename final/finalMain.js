@@ -113,12 +113,12 @@ function setUpPhong(program) {
         program.ambientLight,
         glMatrix.vec3.fromValues(0.6, 0.7, 0.8)
     );
-    gl.uniform3fv(program.lightPosition, glMatrix.vec3.fromValues(2, 20, 1));
-    gl.uniform3fv(program.lightColor, glMatrix.vec3.fromValues(0.8, 0.2, 0));
-    gl.uniform3fv(program.baseColor, glMatrix.vec3.fromValues(0.8, 0, 0.2));
+    gl.uniform3fv(program.lightPosition, glMatrix.vec3.fromValues(-10, 20, 1));
+    gl.uniform3fv(program.lightColor, glMatrix.vec3.fromValues(1, 1, 1));
+    gl.uniform3fv(program.baseColor, glMatrix.vec3.fromValues(.3, .3, .3));
     gl.uniform3fv(
         program.specHighlightColor,
-        glMatrix.vec3.fromValues(0.7, 0.8, 0.2)
+        glMatrix.vec3.fromValues(0.9, 0.9, 0.9)
     );
 
     gl.uniform1f(program.ka, 0.8);
@@ -183,6 +183,8 @@ function drawShapes() {
     drawShape(milaBody, [-6, -5, 3], [5, 5, 5]);
     drawShape(milaMuzzle, [.4, -0.5, -1], [.6, .6, .6]);
     drawShape(leaf, [-.6,1.9,.5], [3,3,3]);
+
+    
     drawShape(milaEar, [-1.5,0,-1], [1,2,1], [40,1,1])
 }
 
@@ -317,7 +319,7 @@ function init() {
     }
 
     // Set the clear color to be black
-    gl.clearColor(0, 0, 0, 1);
+    gl.clearColor(0, 1, 0, 1);
 
     // some GL initialization
     gl.enable(gl.DEPTH_TEST);
@@ -325,7 +327,7 @@ function init() {
 
     gl.cullFace(gl.BACK);
     gl.frontFace(gl.CCW);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clearColor(0.4, .8, 0.2, 1.0);
     gl.depthFunc(gl.LEQUAL);
     gl.clearDepth(1.0);
 

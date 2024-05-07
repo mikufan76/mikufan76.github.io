@@ -1,229 +1,244 @@
 <html>
-    <head>
-        <title>CSCI-610: Assn 7 - Materials and Shading</title>
+  <head>
+    <title>CSCI-610: Assn 7 - Materials and Shading</title>
 
-        <!-- vertex Shader -->
-        <script id="phong-per-vertex-V" type="x-shader/x-vertex">
-            #version 300 es
-            precision mediump float;
-            // Vertex shader for phong illumination model
-            // Per vertex shading
+    <!-- vertex Shader -->
+    <script id="phong-per-vertex-V" type="x-shader/x-vertex">
+      #version 300 es
+      precision mediump float;
+      // Vertex shader for phong illumination model
+      // Per vertex shading
 
-            // Vertex Attributes
-            in vec3 aVertexPosition; // in model coords
-            in vec3 aNormal;    // in model coords
+      // Vertex Attributes
+      in vec3 aVertexPosition; // in model coords
+      in vec3 aNormal;    // in model coords
 
-            // outputs
-            out vec3 theColor;
+      // outputs
+      out vec3 theColor;
 
-            // Transforms
-            uniform mat4 modelT;
-            uniform mat4 viewT;
-            uniform mat4 projT;
+      // Transforms
+      uniform mat4 modelT;
+      uniform mat4 viewT;
+      uniform mat4 projT;
 
-            // Light parameters
-            uniform vec3 ambientLight;
-            uniform vec3 lightPosition;   // in world coords
-            uniform vec3 lightColor;
+      // Light parameters
+      uniform vec3 ambientLight;
+      uniform vec3 lightPosition;   // in world coords
+      uniform vec3 lightColor;
 
-            // object color parameters
-            uniform vec3 baseColor;
-            uniform vec3 specHighlightColor;
+      // object color parameters
+      uniform vec3 baseColor;
+      uniform vec3 specHighlightColor;
 
-            // Phong parameters
-            uniform float ka;
-            uniform float kd;
-            uniform float ks;
-            uniform float ke;
+      // Phong parameters
+      uniform float ka;
+      uniform float kd;
+      uniform float ks;
+      uniform float ke;
 
-            void main()
-            {
-                // All calculations will be done in camera space
-                mat4 modelView = viewT * modelT;
-                mat4 normalmatrix = transpose(inverse (modelView));
+      void main()
+      {
+          // All calculations will be done in camera space
+          mat4 modelView = viewT * modelT;
+          mat4 normalmatrix = transpose(inverse (modelView));
 
-                vec3 vcam = (modelView * vec4(aVertexPosition, 1.0)).xyz;
-                vec3 lcam = (viewT * vec4(lightPosition, 1.0)).xyz;
-                vec3 ncam = (normalmatrix * vec4(aNormal, 1.0)).xyz;
-                ncam = faceforward (ncam, vcam, ncam);
-
-
-                vec3 N = normalize (ncam);
-                vec3 L = normalize (lcam - vcam);
-                vec3 R = normalize (reflect (-L, N));
-                vec3 V = -normalize (vcam);
-
-                // individual components
-                vec3 ambient = ka * ambientLight * baseColor;
-                vec3 diffuse = kd * lightColor * baseColor * max (dot(L, N), 0.0);
-                vec3 spec = ks * specHighlightColor * lightColor * pow (max(dot(R, V), 0.0), ke);
-
-                // final color
-                theColor = ambient + diffuse + spec;
+          vec3 vcam = (modelView * vec4(aVertexPosition, 1.0)).xyz;
+          vec3 lcam = (viewT * vec4(lightPosition, 1.0)).xyz;
+          vec3 ncam = (normalmatrix * vec4(aNormal, 1.0)).xyz;
+          ncam = faceforward (ncam, vcam, ncam);
 
 
-                // transform vertex to clip space
-                gl_Position = projT * viewT * modelT * vec4 (aVertexPosition, 1.0);
-            }
-        </script>
+          vec3 N = normalize (ncam);
+          vec3 L = normalize (lcam - vcam);
+          vec3 R = normalize (reflect (-L, N));
+          vec3 V = -normalize (vcam);
 
-        <script id="phong-per-fragment-V" type="x-shader/x-vertex">
-            #version 300 es
-            precision mediump float;
-            // Vertex shader for phong illumination model
-            // Per vertex shading
+          // individual components
+          vec3 ambient = ka * ambientLight * baseColor;
+          vec3 diffuse = kd * lightColor * baseColor * max (dot(L, N), 0.0);
+          vec3 spec = ks * specHighlightColor * lightColor * pow (max(dot(R, V), 0.0), ke);
 
-            // Vertex Attributes
-            in vec3 aVertexPosition; // in model coords
-            in vec3 aNormal;    // in model coords
-
-            // outputs
-            out vec3 N;
-            out vec3 L;
-            out vec3 V;
-
-            // Transforms
-            uniform mat4 modelT;
-            uniform mat4 viewT;
-            uniform mat4 projT;
-
-            // Light parameters
-            uniform vec3 lightPosition;   // in world coords
-
-            void main()
-            {
-                // All calculations will be done in camera space
-                mat4 modelView = viewT * modelT;
-                mat4 normalmatrix = transpose(inverse (modelView));
-
-                vec3 vcam = (modelView * vec4(aVertexPosition, 1.0)).xyz;
-                vec3 lcam = (viewT * vec4(lightPosition, 1.0)).xyz;
-                vec3 ncam = (normalmatrix * vec4(aNormal, 1.0)).xyz;
-                ncam = faceforward (ncam, vcam, ncam);
-
-                // vectors to pass on to Fragment Shader
-                N = normalize (ncam);
-                L = normalize (lcam - vcam);
-                V = -normalize (vcam);
-
-                // transform vertex to clip space
-                gl_Position = projT * viewT * modelT * vec4 (aVertexPosition, 1.0);
-            }
-        </script>
-
-        <!-- fragment Shader -->
-        <script id="phong-per-fragment-F" type="x-shader/x-fragment">
-            #version 300 es
-
-            // Fragment shader for phong illumination model
-            // Per vertex shading
+          // final color
+          theColor = ambient + diffuse + spec;
 
 
-            precision mediump float;
+          // transform vertex to clip space
+          gl_Position = projT * viewT * modelT * vec4 (aVertexPosition, 1.0);
+      }
+    </script>
 
-            // calculated by vertex shader and passsed to fragment
-            in vec3 N;
-            in vec3 L;
-            in vec3 V;
+    <script id="phong-per-fragment-V" type="x-shader/x-vertex">
+      #version 300 es
+      precision mediump float;
+      // Vertex shader for phong illumination model
+      // Per vertex shading
 
-            // Light parameters
-            uniform vec3 ambientLight;
-            uniform vec3 lightColor;
+      // Vertex Attributes
+      in vec3 aVertexPosition; // in model coords
+      in vec3 aNormal;    // in model coords
 
-            // object color parameters
-            uniform vec3 baseColor;
-            uniform vec3 specHighlightColor;
+      // outputs
+      out vec3 N;
+      out vec3 L;
+      out vec3 V;
 
-            // Phong parameters
-            uniform float ka;
-            uniform float kd;
-            uniform float ks;
-            uniform float ke;
+      // Transforms
+      uniform mat4 modelT;
+      uniform mat4 viewT;
+      uniform mat4 projT;
 
-            // Color that is the result of this shader
-            out vec4 fragColor;
+      // Light parameters
+      uniform vec3 lightPosition;   // in world coords
 
-            void main(void) {
-                // individual components
-                vec3 R = normalize (reflect (-L, N));
+      void main()
+      {
+          // All calculations will be done in camera space
+          mat4 modelView = viewT * modelT;
+          mat4 normalmatrix = transpose(inverse (modelView));
 
-                vec3 ambient = ka * ambientLight * baseColor;
-                vec3 diffuse = kd * lightColor * baseColor * max (dot(L, N), 0.0);
-                vec3 spec = ks * specHighlightColor * lightColor * pow (max(dot(R, V), 0.0), ke);
+          vec3 vcam = (modelView * vec4(aVertexPosition, 1.0)).xyz;
+          vec3 lcam = (viewT * vec4(lightPosition, 1.0)).xyz;
+          vec3 ncam = (normalmatrix * vec4(aNormal, 1.0)).xyz;
+          ncam = faceforward (ncam, vcam, ncam);
 
-                // final color
-                fragColor = vec4 (ambient + diffuse + spec, 1.0);
-            }
-        </script>
+          // vectors to pass on to Fragment Shader
+          N = normalize (ncam);
+          L = normalize (lcam - vcam);
+          V = -normalize (vcam);
 
-        <script id="phong-per-vertex-F" type="x-shader/x-fragment">
-            #version 300 es
+          // transform vertex to clip space
+          gl_Position = projT * viewT * modelT * vec4 (aVertexPosition, 1.0);
+      }
+    </script>
 
-            // Fragment shader for phong illumination model
-            // Per fragment shading
+    <!-- leaf Shader
+    <script id="leaf" type="x-shader/x-fragment">
+      #version 300 es
+      precision lowp float;
+      // uvs passed in from vertex shader
+      in vec2 theUV;
+      // the texture to use
+      uniform sampler2D theTexture;
+      // Color that is the result of this shader
+      out vec4 fragColor;
+      void main(void) {
+          fragColor = texture(theTexture, theUV);
+      }
+    </script> -->
+
+    <!-- fragment Shader -->
+    <script id="phong-per-fragment-F" type="x-shader/x-fragment">
+      #version 300 es
+
+      // Fragment shader for phong illumination model
+      // Per vertex shading
 
 
-            precision mediump float;
+      precision mediump float;
 
-            in vec3 theColor;
+      // calculated by vertex shader and passsed to fragment
+      in vec3 N;
+      in vec3 L;
+      in vec3 V;
 
-            // Color that is the result of this shader
-            out vec4 fragColor;
+      // Light parameters
+      uniform vec3 ambientLight;
+      uniform vec3 lightColor;
 
-            void main(void) {
-                fragColor = vec4 (theColor.xyz, 1.0);
-                //fragColor = vec4 (1.0, 0.0, 0.0, 1.0);
-            }
-        </script>
+      // object color parameters
+      uniform vec3 baseColor;
+      uniform vec3 specHighlightColor;
 
-        <!-- Matrix library and code for standard transformations -->
-        <script type="text/javascript" src="gl-matrix-min.js"></script>
+      // Phong parameters
+      uniform float ka;
+      uniform float kd;
+      uniform float ks;
+      uniform float ke;
 
-        <!-- include the shape creation functions -->
-        <script type="text/javascript" src="./cgIShape.js"></script>
+      // Color that is the result of this shader
+      out vec4 fragColor;
 
-        <!-- definition of standard shapes -->
-        <script type="text/javascript" src="./myShapes-min.js"></script>
+      void main(void) {
+          // individual components
+          vec3 R = normalize (reflect (-L, N));
 
-        <!-- include the main tesselation functions -->
-        <script type="text/javascript" src="./finalMain.js"></script>
+          vec3 ambient = ka * ambientLight * baseColor;
+          vec3 diffuse = kd * lightColor * baseColor * max (dot(L, N), 0.0);
+          vec3 spec = ks * specHighlightColor * lightColor * pow (max(dot(R, V), 0.0), ke);
 
-        <!-- keyboard functions -->
-        <script type="text/javascript">
-            function gotKey(event) {
-                var key = event.key;
+          // final color
+          fragColor = vec4 (ambient + diffuse + spec, 1.0);
+      }
+    </script>
 
-                //  incremental rotation
-                if (key == 'v') {
-                    nowShowing = 'Vertex';
-                    draw();
-                }
+    <script id="phong-per-vertex-F" type="x-shader/x-fragment">
+      #version 300 es
 
-                if (key == 'f') {
-                    nowShowing = 'Fragment';
-                    draw();
-                }
-            }
-        </script>
+      // Fragment shader for phong illumination model
+      // Per fragment shading
 
-        <script type="text/javascript">
-            // Call init once the webpage has loaded
-            window.onload = init;
-        </script>
-    </head>
 
-    <body>
-        <h1>CSCI-610: Assn 7 - Materials and Shading</h1>
-        <table>
-            <tr>
-                <td>
-                    <canvas id="webgl-canvas" width="500" height="500">
-                        Your browser does not support the HTML5 canvas element.
-                    </canvas>
-                </td>
+      precision mediump float;
 
-                <td><img src="Mila.png" style="width: 375px" /></td>
-            </tr>
-        </table>
-    </body>
+      in vec3 theColor;
+
+      // Color that is the result of this shader
+      out vec4 fragColor;
+
+      void main(void) {
+          fragColor = vec4 (theColor.xyz, 1.0);
+          //fragColor = vec4 (1.0, 0.0, 0.0, 1.0);
+      }
+    </script>
+
+    <!-- Matrix library and code for standard transformations -->
+    <script type="text/javascript" src="gl-matrix-min.js"></script>
+
+    <!-- include the shape creation functions -->
+    <script type="text/javascript" src="./cgIShape.js"></script>
+
+    <!-- definition of standard shapes -->
+    <script type="text/javascript" src="./myShapes-min.js"></script>
+
+    <!-- include the main tesselation functions -->
+    <script type="text/javascript" src="./finalMain.js"></script>
+
+    <!-- keyboard functions -->
+    <script type="text/javascript">
+      function gotKey(event) {
+        var key = event.key;
+
+        //  incremental rotation
+        if (key == "v") {
+          nowShowing = "Vertex";
+          draw();
+        }
+
+        if (key == "f") {
+          nowShowing = "Fragment";
+          draw();
+        }
+      }
+    </script>
+
+    <script type="text/javascript">
+      // Call init once the webpage has loaded
+      window.onload = init;
+    </script>
+  </head>
+
+  <body>
+    <h1>CSCI-610: Assn 7 - Materials and Shading</h1>
+    <table>
+      <tr>
+        <td>
+          <canvas id="webgl-canvas" width="500" height="500">
+            Your browser does not support the HTML5 canvas element.
+          </canvas>
+        </td>
+
+        <td><img src="Mila.png" style="width: 375px" /></td>
+      </tr>
+    </table>
+  </body>
 </html>
