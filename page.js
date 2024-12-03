@@ -9,7 +9,7 @@ class Page {
   width = 0;
   height = 0;
   offsetX = 0;
-  offsetY = -300;
+  offsetY = -400 ;
   direction = 1;
   angle = 0;
   animation;
@@ -32,26 +32,23 @@ class Page {
     this.canTurn = canTurn;
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
-    this.width = canvasWidth / 3;
-    this.height = canvasHeight / 2;
+    this.width = canvasWidth / 2 - 20;
+    this.height = canvasHeight - 10;
   }
 
   draw(contents) {
-    push();
     translate(this.canvasWidth / 2, this.canvasHeight / 2); // center origin
-    stroke(250);
+    push();
     strokeWeight(1);
-    point(0, 0);
-
+    fill(240);
     this.turnPage();
-    image(img, this.offsetX, this.offsetY, this.width, this.height);
-
-    // contents();
+    rect(this.offsetX, this.offsetY, this.width, this.height);
+    contents(this.offsetX, this.offsetY, this.width, this.height);
     pop();
   }
 
   turnPage() {
-    this.animation = cos(startFrame - frameCount);
+    this.animation = cos(this.startTurn - frameCount);
     this.lift = abs(this.animation);
 
     if (this.lift >= 0.9999) {
