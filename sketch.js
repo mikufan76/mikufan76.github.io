@@ -1,8 +1,9 @@
+
 let bass, drums, guitar, other, piano, vocals;
 let fft, bassFFT, drumsFFT, guitarFFT, otherFFT, pianoFFT, vocalsFFT;
 let start = 0;
 let page;
-let bg;
+let bg, lad;
 
 function preload() {
   soundFormats("wav", "mp3");
@@ -13,19 +14,25 @@ function preload() {
   piano = loadSound("./media/audio/Mollusk-piano.mp3");
   vocals = loadSound("./media/audio/Mollusk-vocals.mp3");
   bg = loadImage("./media/bg.png");
+  lad = loadImage("./media/lad.png");
 }
 
 function setup() {
   angleMode(DEGREES);
   let cnv = createCanvas(800, 800);
-  cnv.mousePressed(canvasPressed);
-
   text("tap here to play", 10, 20);
   fft = new p5.FFT();
   fft.setInput(other);
   bassFFT = new p5.FFT();
   bassFFT.setInput(bass);
   page = new Page(width, height);
+  let button = createButton("next page");
+  button.position(width / 2, height - 10);
+  button.mousePressed(() => page.setStartTurn());
+
+  let play = createButton("play music");
+  play.position(width / 2, height - 30);
+  play.mousePressed(playMusic);
 }
 
 function draw() {
@@ -85,33 +92,37 @@ function pageOne(x, y, width, height) {
   let wave = fft.waveform();
   let length = 180;
   push();
-  translate(width / 2, -height/4);
-  scale(0.5, .5);
+  translate(width / 2, height / 4 - 200);
+  scale(0.9, 0.5);
   for (let i = 0; i < length; i++) {
     fill(255);
     noFill();
-    stroke(255 * noise(i), (i / length) * 255, 255);
+    stroke(255 * noise(i), (i / length) * 255, 255, 150);
     let index = floor(map(i, 0, length, 0, wave.length - 1));
     let r = map(wave[index], -1, 1, 150, 360);
-    let amp = 0.5;
-    let max = 2;
+    let amp = 1;
+    let max = 1;
     let min = 0.5;
     let period = lerp(min, max, max * sin((millis() - start) / 1000));
     // let x = r * cos(i*millis()/1000);
     let x = r * cos(i);
     let y = r * amp * sin(((2 * Math.PI) / period) * i);
-    ellipse(x, y, 4);
+    square(x, y, 10);
   }
   pop();
+  noStroke();
+  let shadow = color(97, 42, 226, 30)
+  push();
+  shearY(-5);
+  fill(shadow);
+  ellipse(243, 78, 60, 40);
+  pop();
+  image(lad, 200, 1, 70, 70);
 }
 
 const average = (array) => array.reduce((a, b) => a + b) / array.length;
 
-function mousePressed() {
-  page.setStartTurn();
-}
-
-function canvasPressed() {
+function playMusic() {
   // playing a sound file on a user gesture
   // is equivalent to `userStartAudio()`
   if (!bass.isPlaying()) {

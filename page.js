@@ -8,7 +8,7 @@ class Page {
   lift = 0;
   width = 0;
   height = 0;
-  offsetX = 0;
+  offsetX = 0 ;
   offsetY = -400 ;
   direction = 1;
   angle = 0;
@@ -18,6 +18,9 @@ class Page {
   swapDir = false;
 
   setStartTurn() {
+    if (this.isTurning) {
+      return;
+    }
     this.swapDir = this.isTurning;
     this.startTurn = frameCount;
     this.direction = this.direction * -1;
@@ -53,11 +56,13 @@ class Page {
 
     if (this.lift >= 0.9999) {
       this.isTurning = false;
+      this.canTurn = false;
     }
 
     if (this.lift < 0.9999 && this.isTurning) {
       this.scale = this.animation;
       this.angle = this.lift * -1;
+      this.canTurn = false;
       this.shadow = (this.animation * 255) / 2;
     }
 
