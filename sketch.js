@@ -10,7 +10,6 @@ let start = 0;
 
 function preload() {
   soundFormats("wav", "mp3");
-  mySound = loadSound("./media/audio/TheMollusk.wav");
   bass = loadSound("./media/audio/Mollusk-bass.mp3");
   drums = loadSound("./media/audio/Mollusk-drums.mp3");
   guitar = loadSound("./media/audio/Mollusk-guitar.mp3");
