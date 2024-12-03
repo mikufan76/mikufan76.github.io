@@ -59,6 +59,24 @@ function draw() {
   pop();
 
   push();
+  translate(width / 2, height / 2 + 200);
+  for (let i = 0; i < length; i++) {
+    fill(255);
+    noFill();
+    stroke((i / length) * 255,255 * noise(i), 255);
+    let index = floor(map(i, 0, length, 0, wave.length - 1));
+    let r = map(wave[index], -1, 1, 150, 360);
+    let amp = 0.5;
+    let max = 2;
+    let min = 0.5;
+    let period = lerp(min, max, max * sin((millis() - start) / 1000));
+    let x = r * cos(i*millis()/1000);
+    let y = r * amp * sin(((2 * Math.PI) / period) * i);
+    ellipse(x, y, 4);
+  }
+  pop();
+
+  push();
   let step = 1;
   for (let i = 0; i < octaves.length; i += step) {
     let ctr = octaves[i].ctr;
@@ -75,7 +93,7 @@ function draw() {
   for (let i = 0; i < basswave.length; i += 10) {
     stroke(250);
     let num = abs(basswave[i]) * 100;
-    fill(num*20);
+    fill(num * 20);
     rect(i * 10, 10, 10, 10);
   }
 
