@@ -1,5 +1,6 @@
 function pageThree() {
   background("#FFFFCC");
+  image(mollusk, 0,0,width,height)
   let wave = otherFFT.waveform();
   let length = 180;
   push();

@@ -2,7 +2,7 @@ let bass, drums, guitar, other, piano;
 let bassFFT, drumsFFT, guitarFFT, otherFFT, pianoFFT, vocalsFFT;
 let start = 2;
 let page;
-let bg, ladSit, beach, ladAwe, rightArm, leftArm;
+let bg, ladSit, beach, ladAwe, rightArm, leftArm, mollusk;
 let MUSIC_PLAYER;
 let WIDTH = 800;
 let HEIGHT = 500;
@@ -30,6 +30,7 @@ function preload() {
   ladAwe = loadImage("../media/awe.png");
   rightArm = loadImage("../media/rightarm.png");
   leftArm = loadImage("../media/leftarm.png");
+  mollusk = loadImage("../media/mollusk.JPG")
 }
 
 function setup() {
