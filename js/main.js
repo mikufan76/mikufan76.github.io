@@ -28,8 +28,8 @@ function preload() {
   bg = loadImage("../media/bg.png");
   ladSit = loadImage("../media/lad.png");
   ladAwe = loadImage("../media/awe.png");
-  rightArm = loadImage("../media/rightArm.png");
-  leftArm = loadImage("../media/leftArm.png");
+  rightArm = loadImage("../media/rightarm.png");
+  leftArm = loadImage("../media/leftarm.png");
 }
 
 function setup() {
