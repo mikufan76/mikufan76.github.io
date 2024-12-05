@@ -1,8 +1,8 @@
 let bass, drums, guitar, other, piano;
-let fft, bassFFT, drumsFFT, guitarFFT, otherFFT, pianoFFT, vocalsFFT;
-let start = 0;
+let bassFFT, drumsFFT, guitarFFT, otherFFT, pianoFFT, vocalsFFT;
+let start = 2;
 let page;
-let bg, ladSit, beach;
+let bg, ladSit, beach, ladAwe, rightArm, leftArm;
 let MUSIC_PLAYER;
 let WIDTH = 800;
 let HEIGHT = 500;
@@ -27,6 +27,9 @@ function preload() {
   // vocals = loadSound(vocals);
   bg = loadImage("../media/bg.png");
   ladSit = loadImage("../media/lad.png");
+  ladAwe = loadImage("../media/awe.png");
+  rightArm = loadImage("../media/rightArm.png");
+  leftArm = loadImage("../media/leftArm.png");
 }
 
 function setup() {
@@ -40,7 +43,10 @@ function setup() {
   button.mousePressed(buttonPress);
   MUSIC_PLAYER.vocals.addCue(16.2, () => MUSIC_PLAYER.vocals.pause());
   MUSIC_PLAYER.vocals.addCue(19, () => MUSIC_PLAYER.vocals.pause());
-
+  MUSIC_PLAYER.vocals.addCue(60.8, () => MUSIC_PLAYER.pause());
+  MUSIC_PLAYER.vocals.addCue(64.4, () => MUSIC_PLAYER.pause());
+  otherFFT = new p5.FFT();
+  otherFFT.setInput(MUSIC_PLAYER.other);
   // text("tap here to play", 10, 20);
   // fft = new p5.FFT();
   // fft.setInput(other);
@@ -71,6 +77,12 @@ function draw() {
     case 2:
       pageOne(1);
       break;
+    case 3:
+      pageTwo();
+      break;
+    case 4:
+      pageThree();
+      break;
     default:
       state = 0;
       break;
@@ -79,27 +91,7 @@ function draw() {
   stroke(1);
   strokeWeight(2);
   rect(0, 0, width, height);
-  // background(255);
-  // page.draw(pageOne);
-  // bassFFT.analyze();
-  // let octaves = bassFFT.getOctaveBands();
-  // let basswave = bassFFT.waveform();
-  // let length = 180;
-  // push();
-  // translate(width / 2, height / 2 + 200);
-  // for (let i = 0; i < length; i++) {
-  //   fill(255);
-  //   noFill();
-  //   stroke((i / length) * 255,255 * noise(i), 255);
-  //   let index = floor(map(i, 0, length, 0, wave.length - 1));
-  //   let r = map(wave[index], -1, 1, 150, 360);
-  //   let amp = 0.5;
-  //   let max = 2;
-  //   let min = 0.5;
-  //   let period = lerp(min, max, max * sin((millis() - start) / 1000));
-  //   let x = r * cos(i*millis()/1000);
-  //   let y = r * amp * sin(((2 * Math.PI) / period) * i);
-  //   ellipse(x, y, 4);
+
   // }
   // pop();
   // push();
@@ -171,14 +163,17 @@ function buttonPress() {
     case 1:
       MUSIC_PLAYER.vocals.play();
       MUSIC_PLAYER.vocals.jump(16.2);
-      button.html(
-        "Does it speaketh of the trinity? <br>Can it gaze at the sun with its wandering eye?"
-      );
+      button.html("Does it speaketh of the trinity?");
       break;
     case 2:
-      button.html(
-        "Bring forth the mollusk, cast unto me<br>Let's be forever let forever be free"
-      );
+      MUSIC_PLAYER.play();
+      MUSIC_PLAYER.jump(57.5);
+      button.html("Can it gaze at the sun with its wandering eye");
+      break;
+    case 3:
+      MUSIC_PLAYER.play();
+      MUSIC_PLAYER.jump(60.9);
+      button.html("...");
       break;
     default:
       state = 0;

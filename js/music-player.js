@@ -12,12 +12,16 @@ class MusicPlayer {
   vocals;
   soundFormats = ["wav", "mp3"];
   sounds;
+  other;
   isPlaying = false;
 
   constructor() {
     soundFormats(...this.soundFormats);
     instrumentPaths.forEach((path) => {
       this.instruments.push(loadSound(path));
+      if (path.includes("other")) {
+        this.other = this.instruments[this.instruments.length - 1];
+      }
     });
     this.vocals = loadSound(vocals);
     this.sounds = [this.vocals, ...this.instruments];
