@@ -1,3 +1,5 @@
+import { Graphics } from "./pixi.mjs";
+
 class Item {
   constructor(position, rotation, scale) {
     this.position = position;
@@ -7,13 +9,33 @@ class Item {
 }
 
 class Camera extends Item {
-  constructor(position, rotation, scale, lookAt, up) {
+  constructor(position, rotation, scale, lookAt, up, width, height, stage) {
     super(position, rotation, scale);
     this.lookAt = lookAt;
     this.up = up;
+    this.width = width;
+    this.height = height;
+    this.graphics = new Graphics
+    this.stage = stage;
   }
 
-  transformAllObjects(matrix) {}
+  transformAllObjects(matrix) {
+
+  }
+
+  drawPixel(x, y, color) {
+    return new Graphics()
+      .rect(x, y, 1, 1)
+      .fill(color);
+  }
+
+  drawBackground(color) {
+    for (let i = 0; i < this.width; i++) {
+      for (let j = 0; j < this.height; j++) {
+        this.stage.addChild(this.drawPixel(i, j, color))
+      }
+    }
+  }
 }
 
 class RenderObject extends Item {
@@ -25,7 +47,7 @@ class RenderObject extends Item {
     return false;
   }
 
-  transform(matrix) {}
+  transform(matrix) { }
 }
 
 class Light extends Item {
@@ -45,7 +67,7 @@ class Sphere extends RenderObject {
     return false;
   }
 
-  transform(matrix) {}
+  transform(matrix) { }
 }
 
 class Plane extends RenderObject {
@@ -57,5 +79,7 @@ class Plane extends RenderObject {
     return false;
   }
 
-  transform(matrix) {}
+  transform(matrix) { }
 }
+
+export {Camera}
