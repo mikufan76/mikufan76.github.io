@@ -1,4 +1,5 @@
-import { Graphics } from "./pixi.mjs";
+import { Graphics, Color } from "./pixi.mjs";
+import * as math from "./mathlib.js"
 
 class Item {
   constructor(position, rotation, scale) {
@@ -9,7 +10,7 @@ class Item {
 }
 
 class Camera extends Item {
-  constructor(position, rotation, scale, lookAt, up, width, height, stage) {
+  constructor(position, rotation, scale, lookAt, up, width, height, stage, bg) {
     super(position, rotation, scale);
     this.lookAt = lookAt;
     this.up = up;
@@ -17,11 +18,37 @@ class Camera extends Item {
     this.height = height;
     this.graphics = new Graphics
     this.stage = stage;
+    this.pixels = Array(width).fill(0).map(() => Array(height).fill(0).map(() => { return bg }))
+    this.objects = [];
+    this.transforms = {}
+    this.cameraCoords = {};
   }
 
-  transformAllObjects(matrix) {
+  transformAllObjects() {
+    console.log('hi')
+    const n = math.sub(this.position, this.lookAt)
+    console.log(n)
+    console.log(this.up)
+    const u = math.cross(this.up, n)
+    console.log(u)
+    const v = math.cross(n, u);
 
+    this.objects.forEach(obj => {
+      let transform = 
+        [
+          [...obj.position, math.dot(this.position, u)],
+          [...obj.rotation, math.dot(this.position, v)],
+          [...obj.scale, math.dot(this.position, n)],
+          [0, 0, 0, 1]
+
+        ]
+      console.log(JSON.stringify(transform))
+      this.transforms[obj] = transform
+      this.cameraCoords[obj] = 0;
+    })
   }
+
+
 
   drawPixel(x, y, color) {
     return new Graphics()
@@ -29,10 +56,10 @@ class Camera extends Item {
       .fill(color);
   }
 
-  drawBackground(color) {
+  drawBackground() {
     for (let i = 0; i < this.width; i++) {
       for (let j = 0; j < this.height; j++) {
-        this.stage.addChild(this.drawPixel(i, j, color))
+        this.stage.addChild(this.drawPixel(i, j, `rgb(${this.pixels[i][j]})`))
       }
     }
   }
@@ -82,4 +109,4 @@ class Plane extends RenderObject {
   transform(matrix) { }
 }
 
-export {Camera}
+export { Camera, Sphere, Light }
