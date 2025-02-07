@@ -36,9 +36,9 @@ class Camera extends Item {
     this.objects.forEach(obj => {
       let transform = 
         [
-          [...obj.position, math.dot(this.position, u)],
-          [...obj.rotation, math.dot(this.position, v)],
-          [...obj.scale, math.dot(this.position, n)],
+          [...this.position, math.dot(this.position, u)],
+          [...this.rotation, math.dot(this.position, v)],
+          [...this.scale, math.dot(this.position, n)],
           [0, 0, 0, 1]
 
         ]
