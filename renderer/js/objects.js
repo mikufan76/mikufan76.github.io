@@ -34,7 +34,7 @@ class Camera extends Item {
     const v = math.cross(n, u);
 
     this.objects.forEach(obj => {
-      let transform = 
+      let transform =
         [
           [...this.position, math.dot(this.position, u)],
           [...this.rotation, math.dot(this.position, v)],
@@ -59,6 +59,7 @@ class Camera extends Item {
   drawBackground() {
     for (let i = 0; i < this.width; i++) {
       for (let j = 0; j < this.height; j++) {
+        console.log(`rgb(${this.pixels[i][j]})`)
         this.stage.addChild(this.drawPixel(i, j, `rgb(${this.pixels[i][j]})`))
       }
     }
