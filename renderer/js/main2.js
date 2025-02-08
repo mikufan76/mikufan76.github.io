@@ -1,7 +1,9 @@
-import { Application, Assets, Container, Sprite, Graphics } from "./pixi.mjs";
-import * as math from "./mathlib.js";
-const width = 250;
-const height = 250;
+const canvas = document.querySelector('canvas')
+const ctx = canvas.getContext('2d')
+import * as math from "./mathlib.js"
+
+const width = 500;
+const height = 300;
 
 class rgb {
   /**
@@ -18,51 +20,58 @@ class rgb {
   }
 }
 const bg = new rgb(62, 144, 235);
-const focalLength = 25;
+const focalLength = 100;
 
 let objects = [
   {
     shape: "sphere",
-    position: [0, 20, 40],
-    radius: 10,
+    position: [0, -6, 20],
+    radius: 12,
+    color: new rgb(255, 255, 255)
   },
-];
-
-(async () => {
-  // Create a new application
-  const app = new Application();
-  await app.init({ width, height });
-  // Append the application canvas to the document body
-  document.getElementById("pixi-container").appendChild(app.canvas);
-
-  const pixels = Array(width)
-    .fill(0)
-    .map(() =>
-      Array(height)
-        .fill(0)
-        .map(() => {
-          return bg;
-        })
-    );
-
-  for (let i = 0; i < width; i++) {
-    for (let j = 0; j < height; j++) {
-      let x = i - width / 2;
-      let y = j - height / 2;
-      let direction = math.normalize([x, y, focalLength]);
-      pixels[i][j] = trace([0, 0, 0], direction, objects);
-    }
+  {
+    shape: "sphere",
+    position: [15, 4, 25],
+    radius: 12,
+    color: new rgb(203, 238, 248)
+  },
+  {
+    shape: "triangle",
+    points: [[0, 0, 0], [0, 2, 3], [2, 3, 0]],
+    color: new rgb(203, 0, 0)
   }
 
-  paint(app.stage, pixels);
-})();
+];
 
-function paint(stage, pixelGrid) {
+
+const pixels = Array(width)
+  .fill(0)
+  .map(() =>
+    Array(height)
+      .fill(0)
+      .map(() => {
+        return bg;
+      })
+  );
+
+for (let i = 0; i < width; i++) {
+  for (let j = 0; j < height; j++) {
+    let x = i - width / 2;
+    let y = j - height / 2;
+    let direction = math.normalize([x, y, focalLength]);
+    pixels[i][j] = trace([1, 0, 0], direction, objects);
+
+  }
+}
+
+paint(pixels);
+
+function paint(pixelGrid) {
   for (let i = 0; i < pixelGrid.length; i++) {
-    for (let j = 0; j < pixelGrid.length; j++) {
-      stage.addChild(
-        new Graphics().rect(i, j, 1, 1).fill({ color: `${bg.toString()}` })
-      );
+    for (let j = 0; j < pixelGrid[0].length; j++) {
+      let color = pixels[i][j]
+      ctx.fillStyle = color.toString();
+      ctx.fillRect(i, j, 1, 1);
     }
   }
 }
@@ -74,6 +83,7 @@ function intersection(origin, direction, objects) {
   let closestObject;
 
   for (let obj of objects) {
+    let intersect = false;
     if (obj.shape == "sphere") {
       let intersect = SphereIntersection(origin, direction, obj);
       if (intersect.dist < minDistance) {
@@ -82,10 +92,15 @@ function intersection(origin, direction, objects) {
 
         minDistance = intersect.dist;
       }
-
-      //if collided, set to true, else keep it the same
       collided = collided || intersect.collided;
     }
+
+    if (obj.shape == "triangle") {
+      intersect = TriangleIntersection(origin, direction, obj.points)
+    }
+
+
+    //if collided, set to true, else keep it the same 
   }
 
   return {
@@ -99,7 +114,7 @@ function intersection(origin, direction, objects) {
 function trace(origin, direction, objects) {
   let intersect = intersection(origin, direction, objects);
   if (intersect.collided) {
-    return new rgb(255, 1, 1);
+    return intersect.object.color;
   }
   return bg;
 }
@@ -127,4 +142,19 @@ function SphereIntersection(origin, direction, sphere) {
     collided: false,
     dist: Infinity,
   };
+}
+
+function TriangleIntersection(origin, direction, points) {
+  let planeVector = math.normalize(math.cross(math.sub(points[1], points[0]), math.sub(points[2], points[0])))
+  let planeOffset = math.dot(planeVector, points[0])
+  let distToSurface = (planeOffset - math.dot(planeVector, origin)) / math.dot(planeVector, direction)
+  let point = math.add(math.scale(direction, distToSurface), origin)
+  let c1 = math.dot(math.cross(math.sub(points[1], points[0]), math.sub(point, points[0])), planeVector) >= 0
+  let c2 = math.dot(math.cross(math.sub(points[2], points[1]), math.sub(point, points[1])), planeVector) >= 0
+  let c3 = math.dot(math.cross(math.sub(points[0], points[2]), math.sub(point, points[2])), planeVector) >= 0
+  let collide = c1 && c2 && c3
+
+  if (!collide || distToSurface <= 0) { distToSurface = Infinity }
+
+  return { collide: collide, dist: distToSurface, point: point, normal: planeVector, obj: this }
 }

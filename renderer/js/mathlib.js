@@ -22,11 +22,11 @@ function cross(v1, v2) {
         v1[2] * v2[0] - v1[0] * v2[2],
         v1[0] * v2[1] - v1[1] * v2[0],
     ];
-} 
+}
 
-    function mag([x, y, z]) {
-        return Math.sqrt(x ** 2 + y ** 2 + z ** 2)
-    }
+function mag([x, y, z]) {
+    return Math.sqrt(x ** 2 + y ** 2 + z ** 2)
+}
 
 function add([a, b, c], [x, y, z]) {
     return [a + x, b + y, c + z]
@@ -37,4 +37,8 @@ function sub(v, w) {
     return add(v, mul(w, -1))
 }
 
-export { dot, normalize, mul, mag, add, sub, cross }
+function scale(v, s) {
+    return [v.x * s, v.y * s, v.z * s]
+}
+
+export { dot, normalize, mul, mag, add, sub, cross, scale }
