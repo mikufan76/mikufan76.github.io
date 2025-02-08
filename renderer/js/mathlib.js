@@ -38,7 +38,7 @@ function sub(v, w) {
 }
 
 function scale(v, s) {
-    return [v.x * s, v.y * s, v.z * s]
+    return [v[0] * s, v[1] * s, v[2] * s]
 }
 
 export { dot, normalize, mul, mag, add, sub, cross, scale }

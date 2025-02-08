@@ -37,7 +37,13 @@ let objects = [
   },
   {
     shape: "triangle",
-    points: [[0, 0, 0], [0, 2, 3], [2, 3, 0]],
+    points: [[50, 20, 10], [-30, 20, 10], [-50, 20, 60]],
+    color: new rgb(203, 0, 0)
+  },
+
+    {
+    shape: "triangle",
+    points: [[50, 20, 10], [80, 20, 60], [-50, 20, 60]],
     color: new rgb(203, 0, 0)
   }
 
@@ -83,23 +89,21 @@ function intersection(origin, direction, objects) {
   let closestObject;
 
   for (let obj of objects) {
-    let intersect = false;
+    let intersect;
     if (obj.shape == "sphere") {
-      let intersect = SphereIntersection(origin, direction, obj);
-      if (intersect.dist < minDistance) {
-        closestIntersection = intersect;
-        closestObject = obj;
+      intersect = SphereIntersection(origin, direction, obj);
 
-        minDistance = intersect.dist;
-      }
-      collided = collided || intersect.collided;
-    }
-
-    if (obj.shape == "triangle") {
+    } else if (obj.shape == "triangle") {
       intersect = TriangleIntersection(origin, direction, obj.points)
     }
 
+    if (intersect.dist < minDistance) {
+      closestIntersection = intersect;
+      closestObject = obj;
 
+      minDistance = intersect.dist;
+    }
+    collided = collided || intersect.collided;
     //if collided, set to true, else keep it the same 
   }
 
@@ -113,7 +117,7 @@ function intersection(origin, direction, objects) {
 
 function trace(origin, direction, objects) {
   let intersect = intersection(origin, direction, objects);
-  if (intersect.collided) {
+  if (intersect.collided && intersect.object) {
     return intersect.object.color;
   }
   return bg;
@@ -156,5 +160,5 @@ function TriangleIntersection(origin, direction, points) {
 
   if (!collide || distToSurface <= 0) { distToSurface = Infinity }
 
-  return { collide: collide, dist: distToSurface, point: point, normal: planeVector, obj: this }
+  return { collided: collide, dist: distToSurface, point: point, normal: planeVector }
 }
