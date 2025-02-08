@@ -65,7 +65,7 @@ for (let i = 0; i < width; i++) {
     let x = i - width / 2;
     let y = j - height / 2;
     let direction = math.normalize([x, y, focalLength]);
-    pixels[i][j] = trace([1, 0, 0], direction, objects);
+    pixels[i][j] = trace([1, 0,0], direction, objects);
 
   }
 }
