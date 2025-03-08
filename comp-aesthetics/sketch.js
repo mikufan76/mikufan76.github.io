@@ -40,12 +40,13 @@ function setup() {
   guitarDetect = new p5.peakDetect();
   swirlAmp = new p5.Amplitude();
   swirl.connect(swirlAmp);
-  frameRate(32)
+  frameRate(32);
 }
 
 function preload() {
   swirl = loadSound("assets/Mollusk-other.mp3");
-  guitar = loadSound("assets/Mollusk-guitar.mp3");
+  // guitar = loadSound("assets/Mollusk-guitar.mp3");
+  guitar = loadSound("assets/charlieparker.mp3");
 }
 
 const init = () => {
@@ -122,18 +123,20 @@ function draw() {
     return;
   }
 
-  const guitarEnergy = guitarFFT.getEnergy("bass") % 360;
+  // bass", "lowMid", "mid", "highMid", "treble"
+  const guitarEnergy = guitarFFT.getEnergy("highMid") % 360;
   // console.log(guitarEnergy)
 
   antColor = guitarEnergy;
 
   if (guitarDetect.isDetected) {
     console.log("guitar detected");
+    yDir *= -1;
   }
 
-  const energy = swirlAmp.getLevel();
-  ant.x += 1.5 * xDir
-  ant.y = (sin(energy * 360)*100 + height / 2) * yDir;
+  const energy = guitarFFT.getEnergy("highMid");
+  ant.x += 1.5 * xDir;
+  ant.y = (sin(energy * 360) * 100 + height / 2) * yDir;
   // console.log(`${ant.x}, ${ant.y}`);
 
   ant.x = Math.trunc(ant.x);
@@ -147,25 +150,6 @@ function draw() {
 }
 
 function moveAnt(direction) {
-  // let dir = direction % 4;
-
-  // switch (dir) {
-  //   case -1:
-  //     break;
-  //   case 0:
-  //     ant.y -= 1;
-  //     break;
-  //   case 1:
-  //     ant.x += 1;
-  //     break;
-  //   case 2:
-  //     ant.y += 1;
-  //     break;
-  //   default:
-  //     ant.x -= 1;
-  //     break;
-  // }
-
   fill(antColor + baseColor, 80, 50);
   square(ant.x, ant.y, CELL_SIZE);
 
@@ -173,13 +157,31 @@ function moveAnt(direction) {
     console.log("hit rigth edge");
     xDir *= -1;
     ant.x = width - CELL_SIZE - 1;
+  }
 
+  if (ant.x - CELL_SIZE - 1 < 0) {
+    console.log("hit rigth edge");
+    xDir *= -1;
+    ant.x = CELL_SIZE + 1;
   }
-  if (ant.y > height - CELL_SIZE - 1 || ant.y < CELL_SIZE + 1) {
-    console.log("hit edge Y");
+
+  if (ant.y > height - CELL_SIZE - 1) {
+    console.log("hit rigth edge");
     yDir *= -1;
-    baseColor + 100;
+    ant.y = height - CELL_SIZE - 1;
   }
+
+  if (ant.y - CELL_SIZE - 1 < 0) {
+    console.log("hit rigth edge");
+    yDir *= -1;
+    ant.y = CELL_SIZE + 1;
+  }
+
+  // if (ant.y > height - CELL_SIZE - 1 || ant.y < CELL_SIZE + 1) {
+  //   console.log("hit edge Y");
+  //   yDir *= -1;
+  //   baseColor + 100;
+  // }
 }
 
 function mousePressed(e) {
