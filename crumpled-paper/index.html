@@ -1,28 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Crumpled Paper</title>
     <style type="text/css">
-    </style>
+        body {
+            background-color: #ffffff;
+            color: #414141;
+            font-size: 16px;
+            line-height: 1.6;
+            letter-spacing: 0.1px;
+            font-weight: 300;
+            font-family: Arial, sans-serif;
+            width: 100vw;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+          }
 
+          body > * {
+            width: 80%;
+          }
+
+          h1 {
+            font-weight: inherit;
+          }
+
+          h2 {
+            font-weight: inherit;
+          }
+
+          h3 {
+            font-weight: inherit;
+          }
+
+          h4 {
+            font-weight: inherit;
+          }
+
+          h5 {
+            font-weight: inherit;
+          }
+
+          h6 {
+            font-weight: inherit;
+          }
+
+          table {
+            border: 1px solid #aaa;
+            border-collapse: collapse;
+          }
+
+          caption {
+            caption-side: bottom;
+          }
+
+          thead {
+            border: 1px solid #aaa;
+          }
+
+          th {
+            border: 1px solid #aaa;
+          }
+          a {
+            display: inline-block;
+            outline: 0;
+            cursor: pointer;
+            padding: 5px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            vertical-align: middle;
+            width: max-content;
+            border: 1px solid;
+            border-radius: 6px;
+            color: #0366d6;
+            background-color: #fafbfc;
+            border-color: #1b1f2326;
+            box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px 0px,
+              rgba(255, 255, 255, 0.25) 0px 1px 0px 0px inset;
+            transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+            transition-property: color, background-color, border-color;
+          }
+          a:hover {
+            color: #ffffff;
+            background-color: #0366d6;
+            border-color: #1b1f2326;
+            box-shadow: rgba(27, 31, 35, 0.1) 0px 1px 0px 0px,
+              rgba(255, 255, 255, 0.03) 0px 1px 0px 0px inset;
+            transition-duration: 0.1s;
+          }
+    </style>
 </head>
+
 <body>
-    <h1>Crumpled Paper (and bowtie pasta) Simulation</h1>
+    <h1>Crumpled Paper Simulation</h1>
     <video width="700" height="500" controls src="./demo2.m4v"></video>
-    <div><a  href="https://github.com/mikufan76/computer-graphics/tree/main/crumple">Github Repository</a></div>
-    <p>This is a simulation of crumpled paper Godot. It uses Voronoi noise to achieve these effects.</p>
-    <h3>parameters include</h3>
+
+    <a href="https://github.com/mikufan76/computer-graphics/tree/main/crumple">Link to Github Repository</a
+    >
+
+    <h2>About</h2>
+    <p>
+      I love the look of crumpled paper wanted to create a simulator that would
+      create 3D paper models to be used for Paper2D games.
+    </p>
+    <h2>Architecture</h2>
+    <p>
+       Originally, I planned to use research papers to simulate the physics, but I felt that may be overcomplicating the system. I want the "feel" of the paper, not necessarily the physics. I spent a good amount of time just crumpling paper to figure this out. The models are created using Godot. I use Godot's shading language
+      (similar to GLSL) to create a spatial shader modify mesh cubes or planes
+      to create the crumpled look.
+    </p>
+    <h2>System</h2>
+    <p>
+      The system primiarly relies on a modified version of Voronoi noise to
+      create the crumpled look of the paper. Along with the intial cells created
+      from Voronoi noise, I scale the x and z coordinates with a "scrunch"
+      factor. I also added a system in to "pinch" the paper at a certain
+      location to create a crease. The normals of the paper are calcuated just
+      using the height, but can be modified to increase the darkness of the creases.
+    </p>
+    <h3>Parameters include</h3>
     <ul>
-        </li>Voroni columns/rows,</li>
-        </li>Voroni smoothness,</li>
-        </li>paper height,</li>
-        </li>x&z "scrunch,"</li>
-        </li>pinch location,</li>
-        </li>pinch strength,</li>
-        </li>crease intensity,</li>
-        </li>crease brightness</li>
+      <li><div>Voroni columns/rows</div></li>
+      <li><div>Voroni smoothness</div></li>
+      <li><div>paper height</div></li>
+      <li><div>x&z "scrunch"</div></li>
+      <li><div>pinch location</div></li>
+      <li><div>pinch strength</div></li>
+      <li><div>crease intensity</div></li>
+      <li><div>crease brightness</div></li>
     </ul>
-</body>
+
+    <h2>Future Work</h2>
+    <ul>
+      <li><div>More realistic shading</div></li>
+      <li><div>Texture generation rather than mesh modification</div></li>
+      <li><div>Adding "roughness" to the texure to avoid fabric like feel.</div></li>
+      <li><div>Adding the ability for more shapes.</div></li>
+  </body>
 </html>
